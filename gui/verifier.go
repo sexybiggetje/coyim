@@ -68,13 +68,6 @@ func (v *verifier) buildStartVerificationNotification() {
 	v.verificationWarning = builder.getObj("infobar").(gtki.InfoBar)
 	message := builder.getObj("message").(gtki.Label)
 	message.SetText(i18n.Local("Make sure no one else is reading your messages."))
-	sc, _ := message.GetStyleContext()
-	sc.AddProvider(v.displayController.provider, 9999)
-	sc.AddClass("start-verification-msg")
-	v.displayController.provider.LoadFromData(`
-	    .start-verification-msg {
-	        font-size: 16px;
-	    }`)
 	builder.ConnectSignals(map[string]interface{}{
 		"close_verification": func() {
 			v.verificationWarning.Hide()

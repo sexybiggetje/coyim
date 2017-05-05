@@ -4,23 +4,36 @@
     <child internal-child="content_area">
       <object class="GtkBox" id="box">
         <property name="homogeneous">false</property>
-        <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
         <child>
-          <object class="GtkLabel" id="message">
-            <property name="wrap">true</property>
-          </object>
-        </child>
-      </object>
-      <object class="GtkButtonBox" id="button_box">
-        <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
-        <child>
-          <object class="GtkButton" id="verification_button">
-            <property name="label" translatable="yes">Finish verification</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="cancel_button">
-            <property name="label" translatable="yes">Cancel</property>
+          <object class="GtkGrid">
+            <child>
+              <object class="GtkLabel" id="message">
+                <property name="wrap">true</property>
+                <property name="margin-bottom">10</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButtonBox" id="button_box">
+                <child>
+                  <object class="GtkButton" id="cancel_button">
+                    <property name="label" translatable="yes">Cancel</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="verification_button">
+                    <property name="label" translatable="yes">Finish verification</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
           </object>
         </child>
       </object>

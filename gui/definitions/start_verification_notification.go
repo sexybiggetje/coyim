@@ -20,25 +20,25 @@ func (*defStartVerificationNotification) String() string {
           <property name="column-spacing">4</property>
           <property name="row-spacing">10</property>
           <child>
-          <object class="GtkBox">
-            <child>
-              <object class="GtkImage">
-                <property name="file">build/images/alert.png</property>
-                <property name="margin-start">8</property>
-                <property name="margin-end">5</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="message">
-                <property name="wrap">true</property>
-                <property name="justify">GTK_JUSTIFY_LEFT</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
+            <object class="GtkBox">
+              <child>
+                <object class="GtkImage">
+                  <property name="file">build/images/alert.png</property>
+                  <property name="margin-start">8</property>
+                  <property name="margin-end">5</property>
+                </object>
+              </child>
+              <child>
+                <object class="GtkLabel" id="message">
+                  <property name="wrap">true</property>
+                  <property name="justify">GTK_JUSTIFY_LEFT</property>
+                </object>
+              </child>
+            </object>
+            <packing>
+              <property name="left-attach">0</property>
+              <property name="top-attach">0</property>
+            </packing>
           </child>
           <child>
             <object class="GtkButton" id="button_verify">
