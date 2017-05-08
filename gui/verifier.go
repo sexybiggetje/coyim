@@ -97,6 +97,7 @@ func (v *verifier) showNewPinDialog() {
 	pinBuilder := newBuilder("GeneratePIN")
 	v.newPinDialog = pinBuilder.getObj("dialog").(gtki.Dialog)
 	v.newPinDialog.HideOnDelete()
+	v.newPinDialog.SetTransientFor(v.parent)
 	msg := pinBuilder.getObj("SharePinLabel").(gtki.Label)
 	msg.SetText(i18n.Localf("Share the one-time PIN below with %s", v.peer.NameForPresentation()))
 	var pinLabel gtki.Label
@@ -116,28 +117,19 @@ func (v *verifier) showNewPinDialog() {
 		v.newPinDialog.Destroy()
 		v.smpError(err)
 	}
+	pinLabel.SetText(pin)
+	v.session.StartSMP(v.peer.Jid, v.currentResource, i18n.Local("Please enter the PIN that your contact shared with you."), pin)
 	pinBuilder.ConnectSignals(map[string]interface{}{
-		"on_gen_pin": func() {
-			pin, err = createPIN()
-			if err != nil {
-				v.newPinDialog.Destroy()
-				v.smpError(err)
-			}
-			pinLabel.SetText(pin)
-		},
 		"close_share_pin": func() {
 			if v.peerRequestsSMP != nil {
 				v.showSMPHasAlreadyStarted(v.peer.NameForPresentation())
 				return
 			}
 			v.showWaitingForPeerToCompleteSMPDialog()
-			v.session.StartSMP(v.peer.Jid, v.currentResource, i18n.Local("Please enter the PIN that your contact shared with you."), pin)
 			v.newPinDialog.Destroy()
 			v.newPinDialog = nil
 		},
 	})
-	pinLabel.SetText(pin)
-	v.newPinDialog.SetTransientFor(v.parent)
 	v.newPinDialog.ShowAll()
 }
 
