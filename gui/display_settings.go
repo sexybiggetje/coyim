@@ -81,7 +81,7 @@ func newDisplaySettings() *displaySettings {
 }
 
 const (
-	defaultFontSize = 10
+	defaultFontSize = 12
 )
 
 func getFontSizeFrom(w gtki.Widget) uint {
