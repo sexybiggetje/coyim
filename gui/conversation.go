@@ -119,11 +119,9 @@ func (u *gtkUI) newTags() *tags {
 
 	outgoingDelayedUser, _ := g.gtk.TextTagNew("outgoingDelayedUser")
 	outgoingDelayedUser.SetProperty("foreground", cs.conversationOutgoingDelayedUserForeground)
-	outgoingDelayedUser.SetProperty("strikethrough", true)
 
 	outgoingDelayedText, _ := g.gtk.TextTagNew("outgoingDelayedText")
 	outgoingDelayedText.SetProperty("foreground", cs.conversationOutgoingDelayedTextForeground)
-	outgoingDelayedText.SetProperty("strikethrough", true)
 
 	t.table.Add(outgoingUser)
 	t.table.Add(incomingUser)
@@ -212,6 +210,7 @@ func (conv *conversationPane) onEndOtrSignal() {
 	} else {
 		conv.displayNotification(i18n.Local("Private conversation has ended."))
 		conv.updateSecurityWarning()
+		conv.haveShownPrivateEndedNotification()
 	}
 }
 
@@ -310,6 +309,7 @@ func createConversationPane(account *account, uid string, ui *gtkUI, transientPa
 	cp.entry.Connect("key-release-event", cp.doPotentialEntryResize)
 
 	ui.displaySettings.control(cp.history)
+	ui.displaySettings.shadeBackground(cp.pending)
 	ui.displaySettings.control(cp.entry)
 	ui.keyboardSettings.control(cp.entry)
 	ui.keyboardSettings.update()
@@ -600,6 +600,8 @@ func (conv *conversationPane) appendPendingDelayed() {
 			})
 		}
 	}
+
+	conv.hideDelayedMessagesWindow()
 }
 
 func (conv *conversationPane) delayedMessageSent(trace int) {
@@ -610,6 +612,7 @@ func (conv *conversationPane) delayedMessageSent(trace int) {
 	if conv.shownPrivate {
 		conv.appendPendingDelayed()
 	}
+
 }
 
 func (conv *conversationPane) sendMessage(message string) error {
@@ -642,6 +645,9 @@ func (conv *conversationPane) sendMessage(message string) error {
 			trace:           trace,
 		}
 
+		if delayed {
+			conv.showDelayedMessagesWindow()
+		}
 		conv.appendMessage(sent)
 	}
 
@@ -856,7 +862,11 @@ func (conv *conversationPane) appendMessage(sent sentMessage) {
 }
 
 func (conv *conversationPane) displayNotification(notification string) {
-	conv.appendSentMessage(sentMessage{timestamp: time.Now()}, false, taggableText{"statusText", notification})
+	conv.appendSentMessage(
+		sentMessage{timestamp: time.Now()},
+		false,
+		taggableText{"statusText", notification},
+	)
 }
 
 func (conv *conversationPane) displayNotificationVerifiedOrNot(u *gtkUI, notificationV, notificationNV string) {
@@ -952,6 +962,14 @@ func (conv *conversationPane) onShow() {
 		conv.reapOlderThan(time.Now().Add(-reapInterval))
 		conv.hidden = false
 	}
+}
+
+func (conv *conversationPane) showDelayedMessagesWindow() {
+	conv.scrollPending.SetVisible(true)
+}
+
+func (conv *conversationPane) hideDelayedMessagesWindow() {
+	conv.scrollPending.SetVisible(false)
 }
 
 func (conv *conversationWindow) potentiallySetUrgent() {
