@@ -37,15 +37,6 @@ func (*defGeneratePIN) String() string {
                   </object>
               </child>
               <child>
-                  <object class="GtkButton" id="GenPin">
-                      <property name="label" translatable="yes">Generate New PIN</property>
-                      <signal name="clicked" handler="on_gen_pin"/>
-                  </object>
-                  <packing>
-                      <property name="padding">10</property>
-                  </packing>
-              </child>
-              <child>
                   <object class="GtkGrid">
                   <property name="column-spacing">6</property>
                   <property name="row-spacing">2</property>
@@ -122,7 +113,7 @@ func (*defGeneratePIN) String() string {
               <child>
                 <object class="GtkButton" id="button_finished">
                   <property name="can-default">true</property>
-                  <property name="label" translatable="yes">Use PIN</property>
+                  <property name="label" translatable="yes">Close</property>
                   <signal name="clicked" handler="close_share_pin"/>
                 </object>
               </child>
