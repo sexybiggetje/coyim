@@ -12,7 +12,8 @@ func (*defAskToEncrypt) String() string {
     <property name="window-position">GTK_WIN_POS_CENTER</property>
     <property name="modal">true</property>
     <property name="title" translatable="yes">Encrypt configuration file</property>
-    <property name="text" translatable="yes">Would you like to save your configuration file in an encrypted format? This can be significantly more secure, but you will not be able to access your configuration if you lose the password. You will only be asked for your password when CoyIM starts.</property>
+    <property name="text" translatable="yes">Would you like to save your configuration file in an encrypted format? </property>
+    <property name="secondary_text" translatable="yes">This can be significantly more secure, but you will not be able to access your configuration if you lose the password. You will only be asked for your password when CoyIM starts.</property>
     <property name="buttons">GTK_BUTTONS_YES_NO</property>
   </object>
 </interface>
