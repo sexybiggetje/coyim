@@ -8,15 +8,17 @@
 
     This should be easy:
 
-    1. Go to https://www.torproject.org/
+    1. Close CoyIM
 
-    2. Close CoyIM
+    2. Go to https://www.torproject.org/
 
-    3. Download and install
+    3. Download and install Tor
 
-    4. Open/run Tor Browser
+    4. Run Tor or open Tor Browser
 
-    5. Open CoyIM
+    5. Reopen CoyIM
+
+    6. Enjoy!
 
     </property>
     <property name="buttons">GTK_BUTTONS_CLOSE</property>

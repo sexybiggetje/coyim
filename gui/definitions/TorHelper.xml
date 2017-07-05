@@ -5,9 +5,9 @@
     <property name="border_width">7</property>
     <property name="text" translatable="yes">Welcome!</property>
     <property name="secondary_text" translatable="yes">
-    Seems like you don't have Tor installed. Would you like to install it?
+    It is highly encouraged to use it with CoyIM. Tor is a tool for anonymity.
 
-    Tor is a tool for anonymity. It is highly encouraged to use it with CoyIM.
+    Would you like to install it?
 
     If you already have it installed, please run it.
    </property>
