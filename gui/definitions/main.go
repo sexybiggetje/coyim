@@ -36,14 +36,14 @@ func (*defMain) String() string {
                         <child>
                           <object class="GtkMenuItem" id="addMenu">
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">Add...</property>
+                            <property name="label" translatable="yes">Add New Contact</property>
                             <signal name="activate" handler="on_add_contact_window_signal" swapped="no"/>
                           </object>
                         </child>
                         <child>
                           <object class="GtkMenuItem" id="newConvMenu">
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">New Conversation...</property>
+                            <property name="label" translatable="yes">New Conversation</property>
                             <signal name="activate" handler="on_new_conversation_signal" swapped="no"/>
                           </object>
                         </child>
@@ -116,7 +116,7 @@ func (*defMain) String() string {
                         <child>
                           <object class="GtkMenuItem" id="preferencesMenuItem">
                             <property name="can_focus">False</property>
-                            <property name="label" translatable="yes">_Preferences...</property>
+                            <property name="label" translatable="yes">_Preferences</property>
                             <property name="use-underline">True</property>
                             <signal name="activate" handler="on_preferences_signal" swapped="no"/>
                           </object>

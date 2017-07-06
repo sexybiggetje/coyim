@@ -7,7 +7,9 @@
     <property name="text" translatable="yes">
 Would you like to encrypt your configuration file?
     </property>
-    <property name="secondary_text" translatable="yes">This can be significantly more secure, but you will not be able to access your configuration if you lose the password. You will only be asked for your password when CoyIM starts.
+    <property name="secondary_text" translatable="yes">You will not be able to access your configuration file if you lose the
+
+password. You will only be asked for it when CoyIM starts.
     </property>
     <property name="buttons">GTK_BUTTONS_YES_NO</property>
   </object>
