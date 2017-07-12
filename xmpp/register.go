@@ -91,6 +91,7 @@ func (c *conn) createAccount(user, password string) error {
 			// <conflict xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
 			return ErrUsernameConflict
 		case "not-acceptable":
+			fmt.Printf("%#v \n", iq2)
 			// <not-acceptable xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
 			return ErrMissingRequiredRegistrationInfo
 		default:
