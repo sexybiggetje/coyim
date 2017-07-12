@@ -169,8 +169,17 @@ func (u *gtkUI) showServerSelectionWindow() {
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
+					if err == config.ErrTorNotRunning && assistant.GetCurrentPage() != 2 {
+						// TODO: add close
+						assistant.SetPageComplete(pg, false)
+						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
+						formMessage.SetLabel(i18n.Local("We had an error when trying to use Tor.\n\n" +
+							"The registration process currently requires Tor in order to ensure your safety but you don't have Tor turned on.\n \n" +
+							"Make sure to do so."))
 
-					//check for errors that happened before the form is shown
+						return
+					}
+
 					if err != nil && assistant.GetCurrentPage() != 2 {
 						go assistant.SetCurrentPage(2)
 					}
@@ -187,8 +196,6 @@ func (u *gtkUI) showServerSelectionWindow() {
 					log.Printf("Error when trying to get registration form: %v", err)
 
 					switch err {
-					case config.ErrTorNotRunning:
-						doneMessage.SetLabel(i18n.Local("We had an error when trying to use Tor.\nThe registration process currently requires Tor in order to ensure your safety but you don't have Tor turned on.\nMake sure to do so."))
 					case xmpp.ErrMissingRequiredRegistrationInfo:
 						doneMessage.SetLabel(i18n.Local("We had an error when trying to register your account: some required fields are missing."))
 					default:
