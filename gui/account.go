@@ -198,9 +198,12 @@ func (u *gtkUI) showServerSelectionWindow() {
 
 					switch err {
 					case xmpp.ErrMissingRequiredRegistrationInfo:
-						doneMessage.SetLabel(i18n.Local("We had an error when trying to register your account: some required fields are missing."))
+						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
+							"some required fields are missing."))
 					default:
-						doneMessage.SetLabel(i18n.Local("We had an error when trying to contact the server.\nPlease correct your server choice and try again."))
+						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
+							"could not contact the server.\n\n" +
+							"Please correct your server choice and try again."))
 					}
 
 					return
