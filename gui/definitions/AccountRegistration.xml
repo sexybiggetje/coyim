@@ -42,7 +42,9 @@
     <child>
       <object class="GtkBox" id="form">
         <child>
-          <object class="GtkLabel" id="formMessage" />
+	  <object class="GtkLabel" id="formMessage">
+            <property name="margin-top">20</property>
+	  </object>
         </child>
         <child>
           <object class="GtkGrid" id="formGrid">

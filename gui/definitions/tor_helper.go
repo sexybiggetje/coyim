@@ -14,7 +14,9 @@ func (*defTorHelper) String() string {
     <property name="border_width">7</property>
     <property name="text" translatable="yes">Welcome!</property>
     <property name="secondary_text" translatable="yes">
-    It is highly encouraged to use it with CoyIM. Tor is a tool for anonymity.
+    In order to have the best experience, we reccommend you to install Tor.
+
+    Tor is a tool for anonymity.
 
     Would you like to install it?
 
