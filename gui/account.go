@@ -172,6 +172,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 					if err == config.ErrTorNotRunning && assistant.GetCurrentPage() != 2 {
 						// TODO: add close
 						assistant.SetPageComplete(pg, false)
+						assistant.SetPageType(pg, gtki.ASSISTANT_PAGE_SUMMARY)
 						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
 						formMessage.SetLabel(i18n.Local("We had an error when trying to use Tor.\n\n" +
 							"The registration process currently requires Tor in order to ensure your safety but you don't have Tor turned on.\n \n" +
