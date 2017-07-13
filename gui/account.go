@@ -159,7 +159,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 					formMessage.SetLabel("")
 					doneMessage.SetLabel("")
 
-					form.renderForm(title, instructions, fields)
+					form.renderForm(title, fields)
 					assistant.SetPageComplete(pg, true)
 
 					return <-formSubmitted
@@ -174,8 +174,8 @@ func (u *gtkUI) showServerSelectionWindow() {
 						assistant.SetPageType(pg, gtki.ASSISTANT_PAGE_SUMMARY)
 						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
 						formMessage.SetLabel(i18n.Local("We had an error:\n\n" +
-							"The registration process currently requires Tor in order to ensure your \n\n" +
-							"safety. You don't have Tor running.\n \n" +
+							"The registration process currently requires Tor in order to ensure your safety \n\n" +
+							"You don't have Tor running.\n \n" +
 							"Please, run it."))
 
 						return
@@ -199,7 +199,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 					switch err {
 					case xmpp.ErrMissingRequiredRegistrationInfo:
 						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
-							"some required fields are missing."))
+							"Some required fields are missing."))
 					default:
 						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
 							"could not contact the server.\n\n" +
