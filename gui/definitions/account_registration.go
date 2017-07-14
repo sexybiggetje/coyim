@@ -44,13 +44,23 @@ func (*defAccountRegistration) String() string {
         </child>
       </object>
       <packing>
-        <property name="title" translatable="yes">Choose a server</property>
+        <property name="title" translatable="yes">1. Choose a server</property>
         <property name="complete">true</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox" id="form">
         <child>
+          <object class="GtkImage" id="errorImage">
+            <property name="margin_right">15</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkImage" id="spinner">
+            <property name="margin_right">15</property>
+          </object>
+        </child>
+	<child>
 	  <object class="GtkLabel" id="formMessage">
             <property name="margin-top">20</property>
 	  </object>
@@ -64,13 +74,18 @@ func (*defAccountRegistration) String() string {
         </child>
       </object>
       <packing>
-        <property name="title" translatable="yes">Fill the form</property>
+        <property name="title" translatable="yes">2. Create account</property>
         <property name="page-type">GTK_ASSISTANT_PAGE_CONFIRM</property>
       </packing>
     </child>
     <child>
       <object class="GtkBox">
         <child>
+          <object class="GtkImage" id="successImage">
+            <property name="margin_right">15</property>
+          </object>
+	</child>
+	<child>
           <object class="GtkLabel" id="doneMessage" />
         </child>
       </object>

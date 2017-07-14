@@ -130,6 +130,9 @@ func (u *gtkUI) showServerSelectionWindow() {
 	formMessage := builder.getObj("formMessage").(gtki.Label)
 	doneMessage := builder.getObj("doneMessage").(gtki.Label)
 	serverBox := builder.getObj("server").(gtki.ComboBoxText)
+	errorImage := builder.getObj("errorImage").(gtki.Image)
+	successImage := builder.getObj("successImage").(gtki.Image)
+	spinner := builder.getObj("spinner").(gtki.Image)
 
 	for _, s := range servers.GetServersForRegistration() {
 		serverBox.AppendText(s.Name)
@@ -156,6 +159,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 				form.server = serverBox.GetActiveText()
 
 				renderFn := func(title, instructions string, fields []interface{}) error {
+					spinner.Clear()
 					formMessage.SetLabel("")
 					doneMessage.SetLabel("")
 
@@ -166,6 +170,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 				}
 
 				formMessage.SetLabel(i18n.Local("Connecting to server for registration..."))
+				spinner.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
@@ -177,6 +182,8 @@ func (u *gtkUI) showServerSelectionWindow() {
 							"The registration process currently requires Tor in order to ensure your safety \n\n" +
 							"You don't have Tor running.\n \n" +
 							"Please, run it."))
+						spinner.Clear()
+						errorImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
 
 						return
 					}
@@ -221,6 +228,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 					acc.Connect()
 				}
 
+				successImage.SetFromIconName("emblem-default", gtki.ICON_SIZE_DND)
 				doneMessage.SetLabel(i18n.Localf("%s successfully created.", form.conf.Account))
 			}
 		},
