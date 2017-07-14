@@ -123,6 +123,17 @@ func (account *account) connected() bool {
 	return account.session.IsConnected()
 }
 
+func renderTorError(assistant gtki.Assistant, pg gtki.Widget, formMessage gtki.Label, errorImage, spinner gtki.Image) {
+	assistant.SetPageComplete(pg, false)
+	assistant.SetPageType(pg, gtki.ASSISTANT_PAGE_SUMMARY)
+	formMessage.SetLabel(i18n.Local("We had an error:\n\n" +
+		"The registration process currently requires Tor in order to ensure your safety \n\n" +
+		"You don't have Tor running.\n \n" +
+		"Please, run it."))
+	spinner.Clear()
+	errorImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
+}
+
 func (u *gtkUI) showServerSelectionWindow() {
 	builder := newBuilder("AccountRegistration")
 	assistant := builder.getObj("assistant").(gtki.Assistant)
@@ -174,22 +185,14 @@ func (u *gtkUI) showServerSelectionWindow() {
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
-					if err == config.ErrTorNotRunning && assistant.GetCurrentPage() != 2 {
-						assistant.SetPageComplete(pg, false)
-						assistant.SetPageType(pg, gtki.ASSISTANT_PAGE_SUMMARY)
-						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
-						formMessage.SetLabel(i18n.Local("We had an error:\n\n" +
-							"The registration process currently requires Tor in order to ensure your safety \n\n" +
-							"You don't have Tor running.\n \n" +
-							"Please, run it."))
-						spinner.Clear()
-						errorImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
-
-						return
-					}
-
 					if err != nil && assistant.GetCurrentPage() != 2 {
-						go assistant.SetCurrentPage(2)
+						if err != config.ErrTorNotRunning {
+							go assistant.SetCurrentPage(2)
+						}
+
+						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
+						renderTorError(assistant, pg, formMessage, spinner, errorImage)
+						return
 					}
 
 					done <- err
@@ -203,15 +206,15 @@ func (u *gtkUI) showServerSelectionWindow() {
 				if err != nil {
 					log.Printf("Error when trying to get registration form: %v", err)
 
-					switch err {
-					case xmpp.ErrMissingRequiredRegistrationInfo:
-						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
-							"Some required fields are missing."))
-					default:
+					if err != xmpp.ErrMissingRequiredRegistrationInfo {
 						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
 							"could not contact the server.\n\n" +
 							"Please correct your server choice and try again."))
+						return
 					}
+
+					doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
+						"Some required fields are missing."))
 
 					return
 				}
