@@ -26,18 +26,6 @@
             <property name="position">0</property>
           </packing>
         </child>
-        <child>
-          <object class="GtkLabel">
-            <property name="wrap">true</property>
-	    <property name="label" translatable="yes">Since you do not have a configured account,
-we need to set up one.</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
-          </packing>
-        </child>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="button_box">
             <property name="orientation">GTK_ORIENTATION_VERTICAL</property>

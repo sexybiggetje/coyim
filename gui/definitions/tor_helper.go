@@ -14,13 +14,13 @@ func (*defTorHelper) String() string {
     <property name="border_width">7</property>
     <property name="text" translatable="yes">Welcome!</property>
     <property name="secondary_text" translatable="yes">
-    In order to have the best experience, we reccommend you to install Tor.
+We tried and could not check if Tor is installed.
 
-    Tor is a tool for anonymity.
+In order to have the safest experience, we reccommend you to install Tor.
 
-    Would you like to install it?
+Tor is a tool for anonymity.
 
-    If you already have it installed, please run it.
+Would you like to install it?
    </property>
     <property name="buttons">GTK_BUTTONS_YES_NO</property>
   </object>

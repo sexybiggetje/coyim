@@ -51,12 +51,7 @@ func (*defAccountRegistration) String() string {
     <child>
       <object class="GtkBox" id="form">
         <child>
-          <object class="GtkImage" id="errorImage">
-            <property name="margin_right">15</property>
-          </object>
-        </child>
-        <child>
-          <object class="GtkImage" id="spinner">
+          <object class="GtkImage" id="formImage">
             <property name="margin_right">15</property>
           </object>
         </child>
@@ -81,7 +76,7 @@ func (*defAccountRegistration) String() string {
     <child>
       <object class="GtkBox">
         <child>
-          <object class="GtkImage" id="successImage">
+          <object class="GtkImage" id="doneImage">
             <property name="margin_right">15</property>
           </object>
 	</child>

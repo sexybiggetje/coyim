@@ -123,15 +123,31 @@ func (account *account) connected() bool {
 	return account.session.IsConnected()
 }
 
-func renderTorError(assistant gtki.Assistant, pg gtki.Widget, formMessage gtki.Label, errorImage, spinner gtki.Image) {
+var (
+	torErrorMessage = "The registration process currently requires Tor in order to ensure your safety.\n\n" +
+		"You don't have Tor running. Please, start it.\n\n"
+	torLogMessage         = "We had an error when trying to register your account: Tor is not running. %v"
+	storeAccountInfoError = "We had an error when trying to store your account information."
+	storeAccountInfoLog   = "We had an error when trying to store your account information. %v"
+	contactServerError    = "Could not contact the server.\n\n Please correct your server choice and try again."
+	contactServerLog      = "Error when trying to get registration form: %v"
+	requiredFieldsError   = "We had an error:\n\nSome required fields are missing."
+	requiredFieldsLog     = "Error when trying to get registration form: %v"
+)
+
+func renderError(doneImage gtki.Image, doneMessage gtki.Label, errorMessage, logMessage string, err error) {
+	log.Printf(logMessage, err)
+	doneImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
+	doneMessage.SetLabel(i18n.Local(errorMessage))
+}
+
+func renderTorError(assistant gtki.Assistant, pg gtki.Widget, formMessage gtki.Label, formImage gtki.Image, err error) {
+	log.Printf(torLogMessage, err)
 	assistant.SetPageComplete(pg, false)
 	assistant.SetPageType(pg, gtki.ASSISTANT_PAGE_SUMMARY)
-	formMessage.SetLabel(i18n.Local("We had an error:\n\n" +
-		"The registration process currently requires Tor in order to ensure your safety \n\n" +
-		"You don't have Tor running.\n \n" +
-		"Please, run it."))
-	spinner.Clear()
-	errorImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
+	formMessage.SetLabel(i18n.Local(torErrorMessage))
+	formImage.Clear()
+	formImage.SetFromIconName("software-update-urgent", gtki.ICON_SIZE_DIALOG)
 }
 
 func (u *gtkUI) showServerSelectionWindow() {
@@ -141,9 +157,8 @@ func (u *gtkUI) showServerSelectionWindow() {
 	formMessage := builder.getObj("formMessage").(gtki.Label)
 	doneMessage := builder.getObj("doneMessage").(gtki.Label)
 	serverBox := builder.getObj("server").(gtki.ComboBoxText)
-	errorImage := builder.getObj("errorImage").(gtki.Image)
-	successImage := builder.getObj("successImage").(gtki.Image)
-	spinner := builder.getObj("spinner").(gtki.Image)
+	formImage := builder.getObj("formImage").(gtki.Image)
+	doneImage := builder.getObj("doneImage").(gtki.Image)
 
 	for _, s := range servers.GetServersForRegistration() {
 		serverBox.AppendText(s.Name)
@@ -170,7 +185,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 				form.server = serverBox.GetActiveText()
 
 				renderFn := func(title, instructions string, fields []interface{}) error {
-					spinner.Clear()
+					formImage.Clear()
 					formMessage.SetLabel("")
 					doneMessage.SetLabel("")
 
@@ -180,8 +195,9 @@ func (u *gtkUI) showServerSelectionWindow() {
 					return <-formSubmitted
 				}
 
-				formMessage.SetLabel(i18n.Local("Connecting to server for registration..."))
-				spinner.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
+				formMessage.SetLabel(i18n.Local("Connecting to server for registration... \n\n " +
+					"This might take a while."))
+				formImage.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
@@ -190,8 +206,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 							go assistant.SetCurrentPage(2)
 						}
 
-						log.Printf("We had an error when trying to register your account: Tor is not running. %v", err)
-						renderTorError(assistant, pg, formMessage, spinner, errorImage)
+						renderTorError(assistant, pg, formMessage, formImage, err)
 						return
 					}
 
@@ -204,25 +219,21 @@ func (u *gtkUI) showServerSelectionWindow() {
 				err := <-done
 
 				if err != nil {
-					log.Printf("Error when trying to get registration form: %v", err)
-
 					if err != xmpp.ErrMissingRequiredRegistrationInfo {
-						doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
-							"could not contact the server.\n\n" +
-							"Please correct your server choice and try again."))
+						renderError(doneImage, doneMessage, contactServerError, contactServerLog, err)
 						return
 					}
 
-					doneMessage.SetLabel(i18n.Local("We had an error: \n\n" +
-						"Some required fields are missing."))
+					renderError(doneImage, doneMessage, requiredFieldsError, requiredFieldsLog, err)
 
 					return
 				}
 
 				//Save the account
 				err = u.addAndSaveAccountConfig(form.conf)
+
 				if err != nil {
-					doneMessage.SetLabel(i18n.Local("We had an error when trying to store your configuration file."))
+					renderError(doneImage, doneMessage, storeAccountInfoError, storeAccountInfoLog, err)
 					return
 				}
 
@@ -231,11 +242,10 @@ func (u *gtkUI) showServerSelectionWindow() {
 					acc.Connect()
 				}
 
-				successImage.SetFromIconName("emblem-default", gtki.ICON_SIZE_DND)
+				doneImage.SetFromIconName("emblem-default", gtki.ICON_SIZE_DIALOG)
 				doneMessage.SetLabel(i18n.Localf("%s successfully created.", form.conf.Account))
 			}
 		},
-
 		"on_cancel_signal": assistant.Destroy,
 	})
 
