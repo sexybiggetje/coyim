@@ -186,7 +186,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 				form.server = serverBox.GetActiveText()
 
 				renderFn := func(title, instructions string, fields []interface{}) error {
-					formImage.Clear()
+					spinner.Stop()
 					formMessage.SetLabel("")
 					doneMessage.SetLabel("")
 
@@ -199,7 +199,6 @@ func (u *gtkUI) showServerSelectionWindow() {
 				spinner.Start()
 				formMessage.SetLabel(i18n.Local("Connecting to server for registration... \n\n " +
 					"This might take a while."))
-				//formImage.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
@@ -216,8 +215,6 @@ func (u *gtkUI) showServerSelectionWindow() {
 					done <- err
 				}()
 			case 2:
-				//TODO: this page feels like it "hangs" until the registration finishes.
-				//We probably want to give faster feedback by introducing a spinner.
 				formSubmitted <- form.accepted()
 				err := <-done
 

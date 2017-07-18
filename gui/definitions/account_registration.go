@@ -63,6 +63,7 @@ func (*defAccountRegistration) String() string {
       <child>
       <object class="GtkSpinner" id="spinner">
         <property name="visible">True</property>
+        <property name="margin-top">40</property>
         <property name="can_focus">False</property>
         <property name="active">True</property>
       </object>
