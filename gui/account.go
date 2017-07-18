@@ -159,6 +159,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 	serverBox := builder.getObj("server").(gtki.ComboBoxText)
 	formImage := builder.getObj("formImage").(gtki.Image)
 	doneImage := builder.getObj("doneImage").(gtki.Image)
+	spinner := builder.getObj("spinner").(gtki.Spinner)
 
 	for _, s := range servers.GetServersForRegistration() {
 		serverBox.AppendText(s.Name)
@@ -195,9 +196,10 @@ func (u *gtkUI) showServerSelectionWindow() {
 					return <-formSubmitted
 				}
 
+				spinner.Start()
 				formMessage.SetLabel(i18n.Local("Connecting to server for registration... \n\n " +
 					"This might take a while."))
-				formImage.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
+				//formImage.SetFromIconName("system-run", gtki.ICON_SIZE_DIALOG)
 
 				go func() {
 					err := requestAndRenderRegistrationForm(form.server, renderFn, u.dialerFactory, u.unassociatedVerifier())
@@ -206,6 +208,7 @@ func (u *gtkUI) showServerSelectionWindow() {
 							go assistant.SetCurrentPage(2)
 						}
 
+						spinner.Stop()
 						renderTorError(assistant, pg, formMessage, formImage, err)
 						return
 					}
@@ -217,6 +220,8 @@ func (u *gtkUI) showServerSelectionWindow() {
 				//We probably want to give faster feedback by introducing a spinner.
 				formSubmitted <- form.accepted()
 				err := <-done
+
+				spinner.Stop()
 
 				if err != nil {
 					if err != xmpp.ErrMissingRequiredRegistrationInfo {
